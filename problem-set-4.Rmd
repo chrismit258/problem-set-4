@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, comment = "#>")
 1. Publish HTML on Rpubs (you will need to sign up for the free account) and *add the link below*.
 1. Submit a PR with your answers.
 
-*Link to Rpubs document:* XXX
+*Link to Rpubs document:* http://rpubs.com/chrismit258/258789
 
 # Overview
 
@@ -115,15 +115,13 @@ projects %>%
 
 Calculate correlations between `total.cost` and `n.pubs` for each institute. You will need to `join` the `projects` and `project_io` tables to link `institute` with `total.cost` and `n.pubs`. You will then need to use `group_by` and `do` from `dplyr` and `tidy` from `broom` to calculate correlations.
 
-#I didn't use 'do' or 'tidy', but I think it worked...
-
 ```{r problem_4}
 projects %>%
   left_join(project_io) %>%
   select(institute, n.pubs, total.cost) %>%
   filter(!is.na(n.pubs), !is.na(total.cost)) %>%
   group_by(institute) %>%
-  summarize(correlation = cor(n.pubs, total.cost))
+  do(tidy(cor.test(.$n.pubs, .$total.cost)))
 ```
 
 ## Problem 5 (extra credit)
@@ -146,7 +144,7 @@ projects %>%
   select(institute, total.cost, rcr) %>%
   filter(!is.na(rcr), !is.na(total.cost)) %>%
   group_by(institute) %>%
-  summarize(correlation = cor(total.cost, rcr))
+  do(tidy(cor.test(.$total.cost, .$rcr)))
 
 ```
 
@@ -154,7 +152,6 @@ projects %>%
 
 Use [`gganimate`](https://github.com/dgrtwo/gganimate) to illustrate the change in cost of R01s for a few institutes over time.
 
-#I tried, but I can't seem to install ImageMagick, so I keep getting error messages. I'm able to see the graph, but without animation. Also, the curve of these graphs since 2010 is rather depressing! 
 
 ```{r extra_extra_credit}
 library(gapminder)
